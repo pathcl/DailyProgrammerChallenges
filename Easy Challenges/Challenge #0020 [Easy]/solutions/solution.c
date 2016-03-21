@@ -62,6 +62,10 @@ int main(int argc, char **argv){
 
 static void print_primes(int min, int max){
     int *composite_numbers = malloc(sizeof(int) * (max + 1));
+    if (composite_numbers == NULL) {
+        fprintf(stderr, "Insufficient memory\n");
+        exit(EXIT_FAILURE);
+    }
     int i;
     enum { PRIME, NON_PRIME };
     memset(composite_numbers, PRIME, max + 1);
