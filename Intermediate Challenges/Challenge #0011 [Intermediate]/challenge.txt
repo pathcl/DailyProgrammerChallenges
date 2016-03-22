@@ -1,0 +1,4 @@
+An “upside up” number is a number that reads the same when it is rotated 180°. 
+For instance, 689 and 1961 are upside up numbers.
+Your task is to find the next upside up number greater than 1961, and to count 
+the number of upside up numbers less than ten thousand.
