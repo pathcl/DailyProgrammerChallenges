@@ -68,7 +68,7 @@ static void print_primes(int min, int max){
     }
     int i;
     enum { PRIME, NON_PRIME };
-    memset(composite_numbers, PRIME, max + 1);
+    memset(composite_numbers, PRIME, (max + 1) * sizeof(int));
 
     /* Use Sieve of Erastothenes to find primes */
     for (i = 2; i <= max; i++) {
