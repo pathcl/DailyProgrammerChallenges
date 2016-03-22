@@ -804,10 +804,8 @@ int main()
                 fprintf(stdout, "= %f\n", AST_evaluate(root));
             }
             else {
-                fprintf(stderr, "%s\n= ", "main: incomplete expression - "
+                fprintf(stderr, "%s\n", "main: incomplete expression - "
                                           "skipped");
-                AST_print(root);
-                fprintf(stdout, "\n");
             }
         }
         AST_free(&root);
