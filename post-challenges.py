@@ -52,6 +52,9 @@ def get_current_week():
 		f.write(challenge_text[i])
 		f.close()
 		os.system('mv challenge_text.md "{}"'.format(title_lst[i]))
+		#Add a solutions directory to the new challenge directory
+		os.system('mkdir solutions')
+		os.system('mv solutions "{}"'.format(title_lst[i]))
 
 	os.system("./movedirs.sh")
 	os.system("./send-data.sh")
