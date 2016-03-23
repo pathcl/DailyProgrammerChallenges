@@ -2,6 +2,8 @@
  * solution.c:  Build a calculator that takes normal calculator input and    *
  *              gives the answer (solution to Intermediate problem #4)       *
  *                                                                           *
+ *              Alternatively, 'why we don't do things like this in C'       *
+ *                                                                           *
  * Author:      946336 (https://www.github.com/946336)                       *
  *                                                                           *
  * Compiling:   gcc -Wall -Wextra -pedantic -std=c99 solution.c -o calc -lm  *
@@ -620,7 +622,7 @@ void AST_print(AST_Node n)
     char symbol = '@';
     switch (n->type) {
         case LITERAL:
-            fprintf(stdout, "%f", n->num);
+            fprintf(stdout, "%.15g", n->num);
             break;
         case SUM:
             symbol = ADD;
@@ -801,7 +803,7 @@ int main()
         root = parse(expr);
         if (!AST_isempty(root)) {
             if (AST_wellformed(root)) {
-                fprintf(stdout, "= %f\n", AST_evaluate(root));
+                fprintf(stdout, "= %.15g\n", AST_evaluate(root));
             }
             else {
                 fprintf(stderr, "%s\n", "main: incomplete expression - "
