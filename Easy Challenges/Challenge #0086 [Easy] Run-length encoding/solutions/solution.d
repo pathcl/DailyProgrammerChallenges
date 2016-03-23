@@ -8,7 +8,7 @@
  * Bonus : Decode function
  * Bonus : Unicode aware
  *
- * Last Modified: 23-03-2016 HH:MM AM GMT+1
+ * Last Modified: 23-03-2016 12:52 AM GMT+1
  **************************/
 
 import std.typecons : Tuple;
@@ -54,7 +54,7 @@ string RLEDecode (Pair[] rle) {
   import std.array : replicate;
   string ret;
   foreach (Pair p; rle) {
-    ret ~= replicate(p.symbol.to!string, p.count);
+    ret ~= replicate (p.symbol.to!string, p.count);
   }
 
   return ret;
