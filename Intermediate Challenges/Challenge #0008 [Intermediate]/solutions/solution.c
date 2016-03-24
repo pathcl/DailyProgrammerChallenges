@@ -11,7 +11,7 @@ static struct option longopts[] = {
     { NULL, 0, NULL, 0 },
 };
 
-static char *unit_words[] = {
+static char *numbers[] = {
     "zero", "one", "two", "three", "four",
     "five", "six", "seven", "eight", "nine",
     "ten", "eleven", "twelve", "thirteen",
@@ -19,24 +19,18 @@ static char *unit_words[] = {
     "seventeen", "eighteen", "nineteen",
 };
 
-static char *tens_words[] = {
+static char *tens[] = {
     "twenty", "thirty", "forty",
     "fifty", "sixty", "seventy",
     "eighty", "ninety",
 };
 
-static char *multiplier_words[] = {
-    "hundred",
-    "thousand",
-    "million",
-    "milliard",
-    "billion",
-};
+enum { HUNDRED = 100, THOUSAND = 1000, MILLION = 1000000, MILLIARD = 1000000000, BILLION = 1000000000000 };
 
 static void usage(void);
 static void version(void);
 
-static void print_number_in_words(int number);
+static void print_number(int number);
 
 int main(int argc, char **argv){
     int c;
@@ -59,7 +53,7 @@ int main(int argc, char **argv){
     if (optind < argc) {
         int number;
         if (sscanf(argv[optind], "%d", &number)) {
-            print_number_in_words(number);
+            print_number(number);
             puts("");
         }
         else {
@@ -74,25 +68,72 @@ int main(int argc, char **argv){
     return 0;
 }
 
-static void print_number_in_words(int number){
-    if ( number >= 100 ) {
-        int hundreds = (number / 100);
+static void print_number(int number){
+    if(number < 20){
+        printf("%s",numbers[number]);
     }
-    else if ( number >= 20 ) {
-        int tens = (number / 10) % 10 - 2;
-        int units = number % 10;
-        printf("%s", tens_words[tens]);
-        if ( units ) {
+    else if(number < HUNDRED){
+        printf("%s",tens[number / 10 - 2]);
+        number %= 10;
+        if(number > 0){
             printf("-");
-            print_number_in_words(units);
+            print_number(number);
         }
     }
-    else
-        printf("%s", unit_words[number]);
+    else if(number < THOUSAND){
+        printf("%s",numbers[number / HUNDRED]);
+        printf("%s"," hundred");
+        number %= HUNDRED;
+        if(number > 0){
+            printf(" and ");
+            print_number(number);
+        }
+    }
+    else if(number < MILLION){
+        print_number(number / 1000);
+        printf("%s"," thousand");
+        number %= 1000;
+        if(number > 0){
+            if(number < HUNDRED)
+                printf(" and ");
+            else
+                printf(", ");
+            print_number(number);
+        }
+    }
+    else if(number < MILLIARD){
+        print_number(number / MILLION);
+        printf("%s"," million");
+        number %= MILLION;
+        if(number > 0){
+            if(number < HUNDRED)
+                printf(" and ");
+            else
+                printf(", ");
+            print_number(number);
+        }
+    }
+    else if(number < BILLION){
+        print_number(number / MILLIARD);
+        printf("%s"," milliard");
+        number %= MILLIARD;
+        if(number > 0){
+            if(number < HUNDRED)
+                printf(" and ");
+            else
+                printf(", ");
+            print_number(number);
+        }
+    }
 }
 
 static void usage(void){
-    printf("Usage:\n");
+    printf("Usage %s [OPTION]... [number...]\n", invoc_name);
+    printf("Convert Arabic numberals to English words.\n");
+    puts("");
+    puts("Options:");
+    printf(" -h, --help        print this help and exit.\n");
+    printf(" -v, --version     display version information and exit.\n");
 }
 
 static void version(void){
