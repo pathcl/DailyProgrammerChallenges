@@ -1,5 +1,5 @@
 def data_parser(data):
-	print('Your name is {0}, you are {1} years old, and your username is {2}.').format(data[0],data[1],data[2])
+	print 'Your name is {0}, you are {1} years old, and your username is {2}.'.format(data[0],data[1],data[2])
 	if 'y' in data[3]:
 		f = open('data_logger.txt','w')
 		f.write('Your name is {0}, you are {1} years old, and your username is {2}.'.format(data[0],data[1],data[2]))
