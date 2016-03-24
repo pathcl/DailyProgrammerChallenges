@@ -4,7 +4,7 @@ import java.util.Scanner;
  *
  * @author metti
  */
-public class EasyChallange0001 {
+public class Solution1 {
     
     public static void main(String[] args) {
         String name = null;
