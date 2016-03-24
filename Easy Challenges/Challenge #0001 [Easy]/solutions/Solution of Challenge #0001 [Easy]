@@ -6,23 +6,49 @@ import java.util.Scanner;
  */
 public class EasyChallange0001 {
     
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        String name;
-        int age;
-        String uname;
+        String name = null;
+        String age = null;
+        String uname = null;
         
-        Scanner reader = new Scanner(System.in);
+        Scanner reader = new Scanner(System.in);   
         
-        System.out.println("Hi github user!What is your name?");
-        name = reader.nextLine();
-        System.out.println("How old are you?");
-        age = reader.nextInt();
-        System.out.println("What's your username?");
-        uname = reader.next();
+        System.out.println("Hi github user!");
+        while(name == null){
+            System.out.println("What is your name?");  
+            name = reader.nextLine(); 
+            if(!name.contains(" ") ){
+                name = null;
+                System.out.println( "Enter your full name!");
+            }
+            else if(name.matches(".*\\d.*")){
+                name = null;
+                System.out.println( "Enter a valid name!");
+            }
+        }
+        
+        while(age == null){
+            System.out.println("How old are you?");            
+            age = reader.next();  
+            if(!age.matches("[0-9]+")){
+                age = null;
+                System.out.println("Enter a valid age!");
+            } 
+            else if(age.length() >= 3 || age.contains("-") || age.equals("0")){
+                age = null;
+                System.out.println("Your age must be between 1 and 99 !");
+            }
+        }    
+        
+        while(uname == null){
+                System.out.println("What's your username?");
+                uname = reader.next();
+            if(uname.length() < 6){
+                uname = null;
+                System.out.println("Enter a valid username!A username must contain at least 6 chracters");
+            }
+        }
+        
         System.out.println("your name is " + name + ", you are " + age + " years old, and your username is " + uname );
     }
-    
 }
