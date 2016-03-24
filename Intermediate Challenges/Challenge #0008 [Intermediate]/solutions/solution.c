@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <getopt.h>
 
-#define BUFF_SIZE 3
+#define BUFF_SIZE 1024
 
 static char *invoc_name = NULL;
 static char *version_string = "1.0";
