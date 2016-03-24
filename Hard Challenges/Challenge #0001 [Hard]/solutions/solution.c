@@ -10,15 +10,14 @@
 */
 
 #include <stdio.h>
-#include <limits.h>
 
 int main() {
     printf("Number Guessing Game!\n");
     printf("I'm going to try to guess a number that you have thought of.\n");
-    printf("To keep things from getting too hairy, keep the number you think of under %lu ok?\n", ULONG_MAX);
+    printf("To keep things from getting too hairy, keep the number you think of <= 1000 ok?\n");
 
-    unsigned long high = ULONG_MAX;
-    unsigned long currGuess = ULONG_MAX / 2;
+    unsigned long high = 1000;
+    unsigned long currGuess = 500;
     unsigned long low = 0;
 
     //Will hold 1,2, or 3 to represent higher, lower, found.
@@ -33,7 +32,7 @@ int main() {
 
         if (where == 1) {
             low = currGuess;
-            currGuess = low + (high - low) / 2;
+            currGuess = (low + high) / 2;
             if (currGuess == low) {
                 printf("What you told me is impossible... You cheated!\n");
                 return 0;
@@ -41,7 +40,7 @@ int main() {
         }
         else if (where == 2) {
             high = currGuess;
-            currGuess = low + (high - low) / 2;
+            currGuess = (low + high) / 2;
             if (currGuess == high) {
                 printf("What you told me is impossible... You cheated!\n");
                 return 0;
