@@ -62,43 +62,12 @@ int main(int argc, char **argv){
         base_dir[1] = '\0';
     }
 
-    //print_tree(base_dir, depth, NULL);
+    print_tree(base_dir, depth, NULL);
 
     return 0;
 }
 
 static void print_tree(char *directory, int depth, char *preface){
-    DIR *curr_dir;
-    if ( fchdir(fd) ) {
-        perror("Cannot use directory");
-        exit(EXIT_FAILURE);
-    }
-
-    curr_dir = fopendir(fd);
-#if 0
-    DIR *curr_dir = NULL;
-    chdir(directory);
-    /* check whether successful */
-    curr_dir = opendir(".");
-    if (root_dir == NULL) {
-        perror("Cannot open directory");
-        return;
-    }
-
-    if ( preface == NULL )
-        printf("  ");
-
-    printf("%s", directory);
-    /* if there are directories too */
-    if ( depth != 0 )
-        printf("%s  +", directory);
-
-    closedir(curr_dir);
-#endif
-
-    closedir(curr_dir);
-
-    chdir("..");
 }
 
 static void usage(void){
