@@ -12,22 +12,21 @@ my $version_string = "1.0";
 
 my $base_dir = $ARGV[1] // '.';
 
-print_directory_tree($base_dir, 2, "");
+print_directory_tree($base_dir, 3, "");
 
 sub print_directory_tree{
     my ($directory, $depth, $preface) = @_;
-    say "  $directory";
-    say "$preface  +";
-
     opendir my $dh, $directory or die "Cannot open $directory: $!";
-    my @dirs = sort readdir($dh);
-    chdir $directory;
+    my @dirs = sort grep { -d $_ and not /^\./ } readdir($dh);
     closedir $dh;
+
+    print "  " if $preface eq "";
+    say "$directory";
+    say "$preface  +" if @dirs and $depth != 0;
+
+    chdir $directory or warn "Here";
     # For each directory
     for my $dir (@dirs) {
-        next unless -d $dir and not $dir =~ /^\./;
-        say "$preface  |";
-        say "$preface  +--$dir";
         if ( $depth - 1 != 0 ) { # if depth < 0 then as far as can go.
             say "$preface  |";
             print "$preface  +--";
@@ -37,7 +36,6 @@ sub print_directory_tree{
         }
     }
     chdir "..";
-
 }
 
 sub usage{
