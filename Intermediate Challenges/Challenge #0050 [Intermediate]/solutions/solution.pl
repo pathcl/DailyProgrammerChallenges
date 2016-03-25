@@ -12,10 +12,10 @@ my $depth = -1;
 my $base_dir = '.';
 
 GetOptions (
-             "depth"   => \$depth,
-             "path"    => \$base_dir,
-             "help"    => \&usage,
-             "version" => \&version,
+             "depth=i"   => \$depth,    # numeric
+             "path=s"    => \$base_dir, # string
+             "help"      => \&usage,
+             "version"   => \&version,
            )
            or die "Try $0 --help for more information";
 
@@ -23,7 +23,7 @@ print_directory_tree($base_dir, $depth, "");
 
 sub print_directory_tree{
     my ($directory, $depth, $preface) = @_;
-    chdir $directory or warn "Here";
+    chdir $directory or die "Cannot use $directory: $!";
     opendir my $dh, "." or die "Cannot open $directory: $!";
     my @dirs = sort grep { -d and not /^\./ } readdir($dh);
     closedir $dh;
