@@ -32,7 +32,6 @@ sub print_directory_tree{
     say "$directory";
     say "$preface  +" if @dirs and $depth != 0;
 
-    # For each directory
     for ( my $i = 0; $i < @dirs; $i++ ) {
         my $dir = $dirs[$i];
         if ( $depth != 0 ) { # if depth < 0 then as far as can go.
@@ -43,13 +42,14 @@ sub print_directory_tree{
             print_directory_tree($dir, $depth - 1, ($i < $#dirs) ? "$preface  |" : "$preface   ")
         }
     }
+
     chdir "..";
 }
 
 sub usage{
     say "Usage: $0 [LONG-OPTION]...";
     say "   or  $0 [SHORT-OPTION]...";
-    say "Displays a tree for each DIRECTORY";
+    say "Prints out a tree for a given directory or, if none given, the current directory.";
     say "";
     say "   -p, --path      create tree of this directory";
     say "   -d, --depth     show tree to a depth of d";

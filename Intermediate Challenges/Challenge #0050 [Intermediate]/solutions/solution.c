@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <getopt.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <unistd.h>
 
 static char *invoc_name = NULL;
 static char *version_string = "1.0";
@@ -13,19 +17,21 @@ static struct option longopts[] = {
     { NULL, 0, NULL, 0 },
 };
 
-static char *path = NULL;
-static int depth = 0;
 
 static void usage(void);
 static void version(void);
 
+static void print_tree(char *directory, int depth, char *preface);
+
 int main(int argc, char **argv){
     int c;
+    int depth = -1;
+    char *base_dir = NULL;
     invoc_name = argv[0];
     while ( ( c = getopt_long(argc, argv, "p:d:hv", longopts, NULL) ) != -1 ) {
         switch (c) {
             case 'p':
-                path = optarg;
+                base_dir = optarg;
                 break;
             case 'd':
                 c = sscanf(optarg, "%d", &depth);
@@ -49,13 +55,61 @@ int main(int argc, char **argv){
         }
     }
 
+    /* default to current directory */
+    if ( base_dir == NULL ) {
+        base_dir = malloc(sizeof(char) * 2);
+        base_dir[0] = '.';
+        base_dir[1] = '\0';
+    }
 
+    //print_tree(base_dir, depth, NULL);
 
     return 0;
 }
 
+static void print_tree(char *directory, int depth, char *preface){
+    DIR *curr_dir;
+    if ( fchdir(fd) ) {
+        perror("Cannot use directory");
+        exit(EXIT_FAILURE);
+    }
+
+    curr_dir = fopendir(fd);
+#if 0
+    DIR *curr_dir = NULL;
+    chdir(directory);
+    /* check whether successful */
+    curr_dir = opendir(".");
+    if (root_dir == NULL) {
+        perror("Cannot open directory");
+        return;
+    }
+
+    if ( preface == NULL )
+        printf("  ");
+
+    printf("%s", directory);
+    /* if there are directories too */
+    if ( depth != 0 )
+        printf("%s  +", directory);
+
+    closedir(curr_dir);
+#endif
+
+    closedir(curr_dir);
+
+    chdir("..");
+}
+
 static void usage(void){
-    printf("Usage\n");
+    printf( "Usage: %s [LONG-OPTION]...", invoc_name);
+    printf( "   or  %s [SHORT-OPTION]...", invoc_name);
+    printf( "Prints out a tree for a given directory or, if none given, the current directory.");
+    printf( "");
+    printf( "   -p, --path      create tree of this directory");
+    printf( "   -d, --depth     show tree to a depth of d");
+    printf( "   -h, --help      display this help and exit");
+    printf( "   -v, --version   display version information and exit");
 }
 
 static void version(void){
