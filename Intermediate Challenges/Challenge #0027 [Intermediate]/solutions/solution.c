@@ -36,7 +36,7 @@ int main(int argc, char **argv){
     unsigned int day = 17;
     invoc_name = argv[0];
 
-    while ( ( c = getopt_long(argc, argv, "d:b:hv", longopts, NULL) ) != -1 ) {
+    while ( ( c = getopt_long(argc, argv, "d:bhv", longopts, NULL) ) != -1 ) {
         switch (c) {
             case 'd':
                 success = sscanf(optarg, "%u/%u/%u", &day, &month, &year);
@@ -61,9 +61,24 @@ int main(int argc, char **argv){
         }
     }
 
-    int wday = get_weekday(day,month,year);
-    printf("%d/%d/%d is a ", day, month, year);
-    printf("%s\n", weekday[wday]);
+    if ( bonus == 0 ) {
+        int wday = get_weekday(day,month,year);
+        printf("%d/%d/%d is a ", day, month, year);
+        printf("%s\n", weekday[wday]);
+    }
+    else {
+        /* Calculate the number of times St Patrick's day
+         * falls on a Saturday this Century */
+        int count = 0;
+        for ( year = 2001; year <= 2100; year++ ) {
+            if ( get_weekday(day, month, year) == 6 ) {
+                count++;
+            }
+        }
+
+        printf("%d/%d falls on a Saturday %d times this century.\n",
+                day, month, count);
+    }
 
     return 0;
 }
