@@ -7,13 +7,13 @@ char *version_number = "1.0";
 
 struct option longopts[] = {
     { "date", required_argument, NULL, 'd' },
-    { "bonus", required_argument, NULL, 'b' },
+    { "bonus", no_argument, NULL, 'b' },
     { "version", no_argument, NULL, 'v' },
     { "help", no_argument, NULL, 'h' },
     { NULL, 0, NULL, 0 },
 };
 
-char *weekdays[] = {
+char *weekday[] = {
     "Sunday", "Monday", "Tuesday", "Wednesday",
     "Thursday", "Friday", "Saturday",
 };
@@ -22,17 +22,29 @@ void usage(void);
 void version(void);
 
 int get_doomsday(unsigned int year);
-void print_weekday(unsigned int day, unsigned int month, unsigned int year);
+int get_weekday(unsigned int day, unsigned int month, unsigned int year);
 int leapyear(unsigned int year);
+int valid_date(unsigned int day, unsigned int month, unsigned int year);
 
 int main(int argc, char **argv){
     int c;
     int bonus = 0;
+    int success = 0;
+    /* St Patrick's day = 17th March */
+    unsigned int year = 2016;
+    unsigned int month = 3;
+    unsigned int day = 17;
     invoc_name = argv[0];
 
     while ( ( c = getopt_long(argc, argv, "d:b:hv", longopts, NULL) ) != -1 ) {
         switch (c) {
             case 'd':
+                success = sscanf(optarg, "%u/%u/%u", &day, &month, &year);
+                if ( success != 3 || !valid_date(day, month, year) ) {
+                    fprintf(stderr, "Invalid date: %s", optarg);
+                    fprintf(stderr, "Try %s --help for more information.\n", invoc_name);
+                    exit(EXIT_FAILURE);
+                }
                 break;
             case 'b':
                 bonus = 1;
@@ -49,11 +61,9 @@ int main(int argc, char **argv){
         }
     }
 
-    if ( bonus == 0 && optind == argc) {
-        //printf("Oh, dear.\n");
-    }
-
-    print_weekday(15,10,1985);
+    int wday = get_weekday(day,month,year);
+    printf("%d/%d/%d is a ", day, month, year);
+    printf("%s\n", weekday[wday]);
 
     return 0;
 }
@@ -66,7 +76,7 @@ void version(void){
     printf("Weekday v%s\n", version_number);
 }
 
-void print_weekday(unsigned int day, unsigned int month, unsigned int year){
+int get_weekday(unsigned int day, unsigned int month, unsigned int year){
     /*
      * Basic implementation of the Doomsday algorithm
      * see http://ruby.ca/doomsday.html for an explanation
@@ -87,22 +97,38 @@ void print_weekday(unsigned int day, unsigned int month, unsigned int year){
         weekday += 7;
     
     /* 
-     * In leap years, Jan and March Doomsday is 4th and 29th
+     * In leap years, Jan and February Doomsday is 4th and 29th
      * This is a correction for the value in the above
      * months_doomsday array
      */
-    if ( leapyear(year) && ( month == 3 || month == 1) )
+    if ( leapyear(year) && ( month == 2 || month == 1) )
         weekday++;
 
     weekday %= 7;
 
-    printf("%s\n", weekdays[weekday]);
+    return weekday;
 }
 
 int get_doomsday(unsigned int year) {
     /* need to calculate doomsday for arbitrary year */
-    int doomsday = 3 /* DD 1900 = WED */
+    int doomsday = 3; /* DD 1900 = WED */
     int two_digit_year = year % 100;
+    int difference = ( (year / 100) - 19 ) % 4;
+
+    switch ( difference ) {
+        case 0:
+            doomsday = 3;
+            break;
+        case 1:
+            doomsday = 2;
+            break;
+        case 2:
+            doomsday = 0;
+            break;
+        case 3:
+            doomsday = 5;
+            break;
+    }
 
     /* Calculate Doomsday for this year */
     doomsday += two_digit_year / 12;
@@ -129,5 +155,9 @@ int leapyear(unsigned int year){
     if ( year % 400 != 0 )
         return 0;
 
+    return 1;
+}
+
+int valid_date(unsigned int day, unsigned int month, unsigned int year) {
     return 1;
 }
