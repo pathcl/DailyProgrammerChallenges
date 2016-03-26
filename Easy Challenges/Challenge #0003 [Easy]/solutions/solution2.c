@@ -1,4 +1,8 @@
-// this solutions is broken
+// Solution by oz123, github.com/oz123
+//
+// based on the UI of solution 2 with better decrypt and encrypt function
+// see discussion in http://codereview.stackexchange.com/a/2354/19834
+//
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,15 +24,26 @@ enum { ENCRYPT, DECRYPT };
 static void usage(void);
 static void version(void);
 
+
+int encode(int ch, int key) {
+    if (islower(ch)) ch =  (ch-'a' + key) % 26 + 'a';
+    else if (isupper(ch)) ch = (ch-'A' + key) % 26 + 'A';
+    return ch;
+}
+
+int decode(int ch, int key) {
+    return encode(ch, -key);
+}
+
 int main(int argc, char **argv){
-    int c;
+    int ch;
     int key = 3; /* shift for Caesar cipher */
     int mode = ENCRYPT;
     invoc_name = argv[0];
 
-		while ( ( c = getopt_long(argc, argv, "edk:hv", longopts, NULL) ) != -1 ) {
+		while ( ( ch = getopt_long(argc, argv, "edk:hv", longopts, NULL) ) != -1 ) {
 			int valid_key = 0;
-			switch (c) {
+			switch (ch) {
 				case 'd':
 					mode = DECRYPT;
 					break;
@@ -52,23 +67,19 @@ int main(int argc, char **argv){
 			}
 		}
 
-		while ( (c = getchar() ) != EOF ) {
-			if (isalpha(c)) {
-				/* Only valid if character set is ASCII or extension thereof */
-				//printf("%c\n", c);
-				c = (mode == ENCRYPT) ? (c + key) + 26  : c - key + 26;
-				/* deal with wrap-around */
-				if (!isalpha(c))
-				   c += (mode == ENCRYPT) ? - 26: 26;
-			}
-
-			printf("%c", c);
+		if (mode == ENCRYPT)  {
+		while (EOF != (ch=getchar()))
+			putchar(encode(ch, key));
+		} else {
+		while (EOF != (ch=getchar()))
+			putchar(decode(ch, key));
 		}
 
     return 0;
 }
 
 static void usage(void){
+	// the variable invoc_name name is available from the main scope
     printf("Usage: %s [SHORT-OPTION]...\n", invoc_name);
     printf("   or: %s [LONG-OPTION]...\n", invoc_name);
     printf("Run caesar cipher on input and output to standard output.\n");
