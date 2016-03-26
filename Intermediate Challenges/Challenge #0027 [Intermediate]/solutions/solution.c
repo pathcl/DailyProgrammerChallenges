@@ -41,7 +41,7 @@ int main(int argc, char **argv){
             case 'd':
                 success = sscanf(optarg, "%u/%u/%u", &day, &month, &year);
                 if ( success != 3 || !valid_date(day, month, year) ) {
-                    fprintf(stderr, "Invalid date: %s", optarg);
+                    fprintf(stderr, "Invalid date: %s\n", optarg);
                     fprintf(stderr, "Try %s --help for more information.\n", invoc_name);
                     exit(EXIT_FAILURE);
                 }
@@ -81,14 +81,6 @@ int main(int argc, char **argv){
     }
 
     return 0;
-}
-
-void usage(void){
-    printf("Usage: \n");
-}
-
-void version(void){
-    printf("Weekday v%s\n", version_number);
 }
 
 int get_weekday(unsigned int day, unsigned int month, unsigned int year){
@@ -174,5 +166,45 @@ int leapyear(unsigned int year){
 }
 
 int valid_date(unsigned int day, unsigned int month, unsigned int year) {
+    int days_in_month[12] = {
+        31, /* January   */
+        29, /* February  */
+        31, /* March     */
+        30, /* April     */
+        31, /* May       */
+        30, /* June      */
+        31, /* July      */
+        31, /* August    */
+        30, /* September */
+        31, /* October   */
+        30, /* November  */
+        31, /* December  */
+    };
+
+    if ( month == 0 || month > 12)
+        return 0;
+
+    if ( day == 0 || day > days_in_month[month - 1] )
+        return 0;
+
+    if ( month == 2 && day == 29 && !leapyear(year) )
+        return 0;
+
     return 1;
 }
+
+void usage(void){
+    printf("Usage %s [SHORT-OPTION]...\n", invoc_name);
+    printf("   or: %s [LONG-OPTION]...\n", invoc_name);
+    printf("Calculate the weekday of date entered. If no date is given, will calculate St Patrick's day 2016.\n");
+    printf("\n");
+    printf("    -d=date, --date=date   calculate the weekday of date\n");
+    printf("    -b, --bonus            calculate the number of times St Patrick's day is a Saturday, this century.\n");
+    printf("    -h, --help             display this help and exit\n");
+    printf("    -v, --version          display version information and exit\n");
+}
+
+void version(void){
+    printf("Weekday v%s\n", version_number);
+}
+
