@@ -73,7 +73,7 @@ bool hasHigherPriorityThan(TYPE lhs, TYPE rhs);
 #ifndef CALC_AST_H
 #define CALC_AST_H 
 
-
+//#include "operator.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -123,8 +123,8 @@ void label(const char *msg);
 #ifndef CALC_TOKENIZE_H
 #define CALC_TOKENIZE_H 
 
-
-
+//#include "ast.h"
+//#include "operator.h"
 
 typedef struct Token {
     char c;
@@ -144,8 +144,8 @@ Token next_token(char **str);
 #ifndef CALC_EXPLIST_H
 #define CALC_EXPLIST_H 
 
-
-
+//#include "ast.h"
+//#include "operator.h"
 
 typedef struct Explist *Explist;
 
@@ -173,10 +173,10 @@ bool Explist_singleton(Explist e);
 #ifndef CALC_PARSE_H
 #define CALC_PARSE_H 
 
-
-
-
-
+//#include "ast.h"
+//#include "explist.h"
+//#include "tokenize.h"
+//#include "operator.h"
 
 AST_Node parse(char *l);
 
@@ -189,8 +189,8 @@ AST_Node parse(char *l);
 #include <stdio.h>
 #include <stdlib.h>
 
-
-
+//#include "parse.h"
+//#include "ast.h"
 
 /****************************************************************************/
 
@@ -364,7 +364,7 @@ size_t my_getline(char **buf, size_t *size, FILE *fd)
 
 #include <string.h>
 
-
+//#include "operator.h"
 
 /****************************************************************************/
 
@@ -484,7 +484,7 @@ bool hasHigherPriorityThan(TYPE lhs, TYPE rhs)
 /*                                  ast.c                                   */
 /****************************************************************************/
 
-
+//#include "ast.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -849,8 +849,8 @@ double AST_eval(AST_Node root)
 /*                                tokenize.c                                */
 /****************************************************************************/
 
-
-
+//#include "tokenize.h"
+//#include "operator.h"
 
 #include <string.h>
 #include <ctype.h>
@@ -913,7 +913,7 @@ Token next_token(char **str)
 /*                                 explist.c                                */
 /****************************************************************************/
 
-
+//#include "explist.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -1019,10 +1019,10 @@ bool Explist_singleton(Explist e)
 #include <stdlib.h>
 #include <stdio.h>
 
+//#include "parse.h"
+//#include "operator.h"
 
-
-
-
+//#include "ast.h"
 
 AST_Node parse(char *l)
 {
