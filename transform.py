@@ -64,7 +64,7 @@ def update_challenge_dir_name(oldName, difficulty):
         i += 1
 
     if len(temp) > 0:
-        challengeName = ": " + " ".join(temp)
+        challengeName = " - " + " ".join(temp)
     else:
         challengeName = ""
 
