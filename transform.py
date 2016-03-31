@@ -90,7 +90,7 @@ def main():
         for each in challengeNames:
             if each != update_challenge_dir_name(each, level):
                 os.renames(parent_dir + each,
-                          parent_dir + update_challenge_dir_name(each, level))
+                           parent_dir + update_challenge_dir_name(each, level))
                 # print(each + ' <::> ' + update_challenge_dir_name(each, level))
         print(level.capitalize() + ' Challenges!')
     return
