@@ -77,7 +77,7 @@ def main():
     levels = ['easy', 'intermediate', 'hard']
 
     for level in levels:
-        rawChallengeNames = glob.glob(level + ' Challenges/*')
+        rawChallengeNames = glob.glob(os.path.join(level + ' Challenges/*'))
 
         numCharsToRemove = len(level + ' Challenges/')
 
