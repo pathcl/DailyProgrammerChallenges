@@ -7,7 +7,7 @@
 
 CHANGES="$(git diff --name-only)"
 
-git pull origin master; git add -A; git commit -m "Add this weeks challenges";
+git pull origin master; git add -A; git commit -m "Add this weeks challenges"; git push
 
 read -r line < ../mynumber.txt
 
