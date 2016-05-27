@@ -40,7 +40,7 @@ def get_current_week():
 	title_lst = []
 	for title in challenge_titles:
 		t = re.sub(r'\[([0-9\-]+)\]', '', title) # removes datestamp
-		t = re.sub(r'[<>:\"\\\/|?*]', '', title) # removes special chars
+		t = re.sub(r'[<>:\"\\\/|?*]', '', t) # removes special chars
 		title_lst.append(t.lstrip())
 	pprint(title_lst)
 
