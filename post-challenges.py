@@ -10,7 +10,7 @@ import os
 import praw
 from pprint import pprint
 
-NUM_CHALLENGES = 3
+NUM_CHALLENGES = 1
 
 debug = False
 def db(string):
