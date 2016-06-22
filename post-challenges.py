@@ -56,7 +56,6 @@ def get_current_week():
 		os.system('mkdir solutions')
 		os.system('mv solutions "{}"'.format(title_lst[i]))
 
-	os.system("./movedirs.sh")
 	os.system("./send-data.sh")
 
 
