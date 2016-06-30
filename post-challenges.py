@@ -10,7 +10,7 @@ import os
 import praw
 from pprint import pprint
 
-NUM_CHALLENGES = 3
+NUM_CHALLENGES = 1
 
 debug = False
 def db(string):
@@ -29,8 +29,8 @@ def get_current_week():
 	sub = r.get_subreddit("dailyprogrammer")
 	
 	# retrieve generators for top posts
-	chals = sub.get_new(limit=3)
-	_chals = sub.get_new(limit=3)
+	chals = sub.get_new(limit=1)
+	_chals = sub.get_new(limit=1)
 	
 	# get challenge titles & selftext
 	challenge_titles = [str(x.title) for x in chals]
@@ -40,6 +40,7 @@ def get_current_week():
 	title_lst = []
 	for title in challenge_titles:
 		t = re.sub(r'\[([0-9\-]+)\]', '', title) # removes datestamp
+		t = re.sub(r'[<>:\"\\\/|?*]', '', t) # removes special chars
 		title_lst.append(t.lstrip())
 	pprint(title_lst)
 
@@ -55,7 +56,6 @@ def get_current_week():
 		os.system('mkdir solutions')
 		os.system('mv solutions "{}"'.format(title_lst[i]))
 
-	os.system("./movedirs.sh")
 	os.system("./send-data.sh")
 
 
@@ -78,7 +78,7 @@ def get_all_submissions():
 	title_lst = []
 	for title in challenge_titles:
 		t = re.sub(r'\[([0-9\-\/]+)\]', '', title)
-		t = re.sub(r'[<>:\"\\\/|?*]', '', title) 
+		t = re.sub(r'[<>:\"\\\/|?*]', '', t) 
 		title_lst.append(t.lstrip())
 	print("\nTITLES length", len(title_lst))
 	print("\n")
