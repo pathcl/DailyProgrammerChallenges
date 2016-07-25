@@ -9,6 +9,10 @@ import re
 import os
 import praw
 from pprint import pprint
+import logging
+
+logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', 
+		    filename='dpc.log', level=logging.DEBUG)
 
 NUM_CHALLENGES = 1
 
@@ -38,25 +42,33 @@ def get_current_week():
 
 	# cleanup titles for directory names
 	title_lst = []
+	logging.info("Started cleaning title names {}".format(challenge_titles))
 	for title in challenge_titles:
 		t = re.sub(r'\[([0-9\-]+)\]', '', title) # removes datestamp
 		t = re.sub(r'[<>:\"\\\/|?*]', '', t) # removes special chars
 		title_lst.append(t.lstrip())
-	pprint(title_lst)
+	logging.info("Finished cleaning title names {}".format(title_lst))
 
 	# name directories after challenges
 	# add challenge selftext to directories
+	logging.info("Started creating directories")
 	for i in range(NUM_CHALLENGES):
 		os.system('mkdir "{}"'.format(title_lst[i]))
+		logging.info("Created directory {}".title_lst[i])
 		f = open('challenge_text.md', 'w')
 		f.write(challenge_text[i])
 		f.close()
+		logging.info("Wrote challenge text to file")
 		os.system('mv challenge_text.md "{}"'.format(title_lst[i]))
-		#Add a solutions directory to the new challenge directory
+		logging.info("Moved challenge text to directory")
+		# Add a solutions directory to the new challenge directory
 		os.system('mkdir solutions')
 		os.system('mv solutions "{}"'.format(title_lst[i]))
-
+		logging.info("Created solutions directory")
+	
+	logging.info("Started sending data script")
 	os.system("./send-data.sh")
+	logging.info("Finished sending data")
 
 
 def get_all_submissions():
@@ -111,4 +123,6 @@ def catch(data):
 
 
 if __name__ == '__main__':
-	get_current_week()	
+	logging.info("Started get_current_week()")
+	get_current_week()
+	logging.info("Finished get_current_week()")
