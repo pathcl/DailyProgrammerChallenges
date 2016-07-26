@@ -54,7 +54,7 @@ def get_current_week():
 	logging.info("Started creating directories")
 	for i in range(NUM_CHALLENGES):
 		os.system('mkdir "{}"'.format(title_lst[i]))
-		logging.info("Created directory {}".title_lst[i])
+		logging.info("Created directory {}".format(title_lst[i]))
 		f = open('challenge_text.md', 'w')
 		f.write(challenge_text[i])
 		f.close()
