@@ -138,6 +138,11 @@ Instead of using `#` as a wall piece, you could use [UTF-8 boxes](https://en.wik
 
 Add a limited sight for the player, so the player has to navigate without seeing the complete maze
 
+##Bonus 7 by /u/GentlemanGallimaufry
+
+When moving blocks, you have a chance that you block yourself from the exit.
+So when this happens you should give a game over message.
+
 #Finally
 
 Have a good challenge idea?
