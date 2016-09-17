@@ -15,17 +15,6 @@ logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S
 		    filename='dpc.log', level=logging.DEBUG)
 
 
-def cli():
-	"""
-	Allows users to run the get_current_week function
-	from the command line and specify the number of
-	recent challenges that they want to retrieve
-	"""
-
-	num_challenges = sys.argv[1]
-	get_current_week(num_challenges)
-
-
 def get_current_week(num_challenges=1):
 	"""
 	Gets 3 challenges, easy, intermediate, hard
@@ -34,14 +23,15 @@ def get_current_week(num_challenges=1):
 	named after the challenge titles
 	"""
 
-	limit = int(num_challenges)
+	if len(sys.argv) > 1:
+		num_challenges = int(sys.argv[1])
 
 	r = praw.Reddit(user_agent="dailyprogrammer-challenges")
 	sub = r.get_subreddit("dailyprogrammer")
 
 	# retrieve generators for top posts
-	chals = sub.get_new(limit=limit)
-	_chals = sub.get_new(limit=limit)
+	chals = sub.get_new(limit=num_challenges)
+	_chals = sub.get_new(limit=num_challenges)
 
 	# get challenge titles & selftext
 	challenge_titles = [str(x.title) for x in chals]
@@ -59,7 +49,7 @@ def get_current_week(num_challenges=1):
 	# name directories after challenges
 	# add challenge selftext to directories
 	logging.info("Started creating directories")
-	for i in range(limit):
+	for i in range(num_challenges):
 		os.system('mkdir "{}"'.format(title_lst[i]))
 		logging.info("Created directory {}".format(title_lst[i]))
 		f = open('challenge_text.md', 'w')
@@ -79,9 +69,9 @@ def get_current_week(num_challenges=1):
 
 
 # TODO: Move this to a separate file
-def get_all_submissions():
+def get_all_challenges():
 	"""
-	Gets all submissions from the entire dailyprogrammer
+	Gets all challenges from the entire dailyprogrammer
 	subreddit and stores their titles and selftexts
 	in their own directories
 	"""
@@ -128,8 +118,5 @@ def catch(data):
 
 if __name__ == '__main__':
 	logging.info("Started get_current_week()")
-	if len(sys.argv) == 1:
-		get_current_week()
-	else:
-		cli()
+	get_current_week()
 	logging.info("Finished get_current_week()")
