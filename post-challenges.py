@@ -8,34 +8,41 @@ Purpose: Used to pull weekly challenges from r/dailyprogrammer
 import re
 import os
 import praw
-from pprint import pprint
 import logging
+import sys
 
-logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', 
+logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',
 		    filename='dpc.log', level=logging.DEBUG)
 
-NUM_CHALLENGES = 1
 
-debug = False
-def db(string):
-	if debug:
-		print("DB: ", string)
+def cli():
+	"""
+	Allows users to run the get_current_week function
+	from the command line and specify the number of
+	recent challenges that they want to retrieve
+	"""
+
+	num_challenges = sys.argv[1]
+	get_current_week(num_challenges)
 
 
-def get_current_week():
-	""" Gets 3 challenges, easy, intermediate, hard
+def get_current_week(num_challenges=1):
+	"""
+	Gets 3 challenges, easy, intermediate, hard
 	for the current week from r/dailyprogrammer
 	and stores the challenge text in directories
 	named after the challenge titles
 	"""
 
+	limit = int(num_challenges)
+
 	r = praw.Reddit(user_agent="dailyprogrammer-challenges")
 	sub = r.get_subreddit("dailyprogrammer")
-	
+
 	# retrieve generators for top posts
-	chals = sub.get_new(limit=1)
-	_chals = sub.get_new(limit=1)
-	
+	chals = sub.get_new(limit=limit)
+	_chals = sub.get_new(limit=limit)
+
 	# get challenge titles & selftext
 	challenge_titles = [str(x.title) for x in chals]
 	challenge_text = [str(x.selftext) for x in _chals]
@@ -52,7 +59,7 @@ def get_current_week():
 	# name directories after challenges
 	# add challenge selftext to directories
 	logging.info("Started creating directories")
-	for i in range(NUM_CHALLENGES):
+	for i in range(limit):
 		os.system('mkdir "{}"'.format(title_lst[i]))
 		logging.info("Created directory {}".format(title_lst[i]))
 		f = open('challenge_text.md', 'w')
@@ -65,23 +72,25 @@ def get_current_week():
 		os.system('mkdir solutions')
 		os.system('mv solutions "{}"'.format(title_lst[i]))
 		logging.info("Created solutions directory")
-	
+
 	logging.info("Started sending data script")
 	os.system("./send-data.sh")
 	logging.info("Finished sending data")
 
 
+# TODO: Move this to a separate file
 def get_all_submissions():
-	""" Gets all submissions from the entire dailyprogrammer
-	subreddit and stores their titles and selftexts 
-	in order to initialize the repository
 	"""
-	
+	Gets all submissions from the entire dailyprogrammer
+	subreddit and stores their titles and selftexts
+	in their own directories
+	"""
+
 	r = praw.Reddit(user_agent="dailyprogrammer-all")
-	sub = r.search("Challenge #", subreddit="dailyprogrammer", sort="hot", limit=1000, period='all')	
+	sub = r.search("Challenge #", subreddit="dailyprogrammer", sort="hot", limit=1000, period='all')
 	_sub = r.search("Challenge #", subreddit="dailyprogrammer", sort="hot", limit=1000, period='all')
-	
-	
+
+
 	# get challenge titles & selftext
 	challenge_titles = [catch(str(x.title)) for x in sub]
 	challenge_text = [catch(str(x.selftext)) for x in _sub]
@@ -90,16 +99,13 @@ def get_all_submissions():
 	title_lst = []
 	for title in challenge_titles:
 		t = re.sub(r'\[([0-9\-\/]+)\]', '', title)
-		t = re.sub(r'[<>:\"\\\/|?*]', '', t) 
+		t = re.sub(r'[<>:\"\\\/|?*]', '', t)
 		title_lst.append(t.lstrip())
-	print("\nTITLES length", len(title_lst))
-	print("\n")
-	#pprint(title_lst)
 
 	# name directories after challenges
 	for i in range(len(challenge_titles)):
 		os.system('mkdir "{}"'.format(title_lst[i]))
-	
+
 	# add challenge selftext to directories
 	for i in range(len(challenge_titles)):
 		f = open('challenge_text.md', 'w')
@@ -109,20 +115,21 @@ def get_all_submissions():
 
 
 def catch(data):
-	""" Used to skip over any encoding errors
-	when using LC for creation of titles and selftext
-	lists
+	"""
+	Used to skip over any encoding errors when
+	creating titles and selftext lists
 	"""
 
 	try:
-		print(data)
 		return data
-	except UnicodeEncodeError as e:	
-		print("\n\n\nYOU'VE HIT THE CATCH!!\n")
-		return 'trash'
+	except UnicodeEncodeError as e:
+		logging.info('UnicodeEncodeError: ' + e)
 
 
 if __name__ == '__main__':
 	logging.info("Started get_current_week()")
-	get_current_week()
+	if len(sys.argv) == 1:
+		get_current_week()
+	else:
+		cli()
 	logging.info("Finished get_current_week()")

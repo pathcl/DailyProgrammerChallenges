@@ -9,7 +9,7 @@ CHANGES="$(git diff --name-only)"
 
 ./movedirs.sh
 
-git pull origin master; git add -A; git commit -m "Add today's challenge"; git push
+git pull origin master; git add -A; git commit -m "Add challenge(s)"; git push
 
 read -r line < ../mynumber.txt
 
