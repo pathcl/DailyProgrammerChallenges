@@ -10,7 +10,7 @@ i.e. Challenge 0001 - {challenge title}
 
 import glob
 import os
-import regex
+import re
 
 # This script will run on the Easy Medium and Hard directories.
 
