@@ -27,11 +27,11 @@ def get_current_week(num_challenges=1):
 		num_challenges = int(sys.argv[1])
 
 	r = praw.Reddit(user_agent="dailyprogrammer-challenges")
-	sub = r.get_subreddit("dailyprogrammer")
+	sub = r.subreddit("dailyprogrammer")
 
 	# retrieve generators for top posts
-	chals = sub.get_new(limit=num_challenges)
-	_chals = sub.get_new(limit=num_challenges)
+	chals = sub.new(limit=num_challenges)
+	_chals = sub.new(limit=num_challenges)
 
 	# get challenge titles & selftext
 	challenge_titles = [str(x.title) for x in chals]
@@ -62,10 +62,6 @@ def get_current_week(num_challenges=1):
 		os.system('mkdir solutions')
 		os.system('mv solutions "{}"'.format(title_lst[i]))
 		logging.info("Created solutions directory")
-
-	logging.info("Started sending data script")
-	os.system("./send-data.sh")
-	logging.info("Finished sending data")
 
 
 # TODO: Move this to a separate file
