@@ -20,10 +20,10 @@ def update_challenge_dir_name(oldName, difficulty):
     suspects that it would fail a valid transformation.'''
 
     # Find the challenge number:
-    #  tokens, delimited by ' '
-    #  find the first token that has one number embedded within
-    #   This should be the challenge number
-    #     This should avoid other strings with multiple numbers e.g. '[2016-05-20]'
+    # tokens, delimited by ' '
+    # find the first token that has one number embedded within
+    # This should be the challenge number
+    # This should avoid other strings with multiple numbers e.g. '[2016-05-20]'
     tokens = oldName.split()
 
     currNum = ''
@@ -41,14 +41,14 @@ def update_challenge_dir_name(oldName, difficulty):
         n = n - 1
 
     # No correct looking number found, or, it appears that the
-    #   number returned already appears to be in canonical form
+    # number returned already appears to be in canonical form
     if (n == 0 or currNum[0] == '0'):
         return oldName
           
     # Found a likely looking number
-    #   tokens now possess' the remaining title
-    #   a_token now has the original and possible multiple iteration number
-    #     such as 166b
+    # tokens now possess' the remaining title
+    # a_token now has the original and possible multiple iteration number
+    # such as 166b
     i = re.findall(r'\S*' + re.escape(currNum) + '(\S*)$', a_token)
     newNum = ' ' + '0'*(4-n) + currNum + (i.pop() if (len(i) > 0) else ' ') + ' '
 
