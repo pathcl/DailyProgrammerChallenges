@@ -19,57 +19,50 @@ def update_challenge_dir_name(oldName, difficulty):
     '''Update the specified challenge dirs names. Returns original name if it
     suspects that it would fail a valid transformation.'''
 
-    temp = oldName.split()
+    # Find the challenge number:
+    #  tokens, delimited by ' '
+    #  find the first token that has one number embedded within
+    #   This should be the challenge number
+    #     This should avoid other strings with multiple numbers e.g. '[2016-05-20]'
+    tokens = oldName.split()
 
-    # Find the current challenge number.
+    currNum = ''
+    n = 0
+    while (len(tokens) > 0 and n == 0):
+        a_token = tokens.pop(0)
+        match = re.findall(r'(\d{1,5})', a_token)
+        if (match and len(match) == 1):
+            currNum = match[0]
+            n = len(currNum)
 
-    # This will match the first number in the string.
-    # The extra stuff on either side makes sure that it will not match strings
-    # longer than the specified amount in the middle.
-    match = regex.search(r'(?<=[^\d]|^)\d{1,5}(?=[^\d]|$)', oldName)
+    # Clean up submissions with leading zeros
+    if (a_token[0] == '#' and n != 0 and currNum[0] == '0'):
+        currNum = currNum[1:]
+        n = n - 1
 
-    # n is the number of digits in the challenge number.
-    # I will use this to know how many zeroes to enter.
-    if (match):
-        currNum = match.group()
-        n = len(currNum)
-
-        # Handle challenges that have multiple iterations, such as 166b
-        if (regex.match(r'[.\S]', oldName[match.end()])):
-            newNum = ' ' + '0'*(4-n-1) + currNum[-n:]
-            newNum += oldName[match.end()] + ' '
-        else:
-            newNum = ' ' + '0'*(4-n) + currNum[-n:] + ' '
-    else:
+    # No correct looking number found, or, it appears that the
+    #   number returned already appears to be in canonical form
+    if (n == 0 or currNum[0] == '0'):
         return oldName
+          
+    # Found a likely looking number
+    #   tokens now possess' the remaining title
+    #   a_token now has the original and possible multiple iteration number
+    #     such as 166b
+    i = re.findall(r'\S*' + re.escape(currNum) + '(\S*)$', a_token)
+    newNum = ' ' + '0'*(4-n) + currNum + (i.pop() if (len(i) > 0) else ' ') + ' '
 
-    newTitle = 'Challenge' + newNum + difficulty.capitalize()
+    # Construct new title
+    newTitle = 'Challenge' + newNum + difficulty.capitalize() + ' - '
 
-    # Try to tease out the challenge name...
-    # First, remove the number we found earlier from the string...
+    suffix = " ".join([w for w in tokens
+        if len(re.findall(r'' +
+                      '\[' + difficulty + '|' +
+                      currNum + '|' +
+                     'challenge',
+                     w, re.IGNORECASE)) == 0])
 
-    notName = [i for i, number in enumerate(temp)
-               if regex.search(currNum + r'|' +
-                               r'challenge|' + difficulty,
-                               number, regex.IGNORECASE)]
-
-    # I squashed several "single" filters down to one OR'd filter.
-    # This is the syntax for the "single" filters.
-    # notName += [i for i, number in enumerate(temp)
-    #             if re.search('challenge', number, re.IGNORECASE)]
-
-    i = 0
-    for curr in notName:
-        temp.pop(curr - i)
-        i += 1
-
-    if len(temp) > 0:
-        challengeName = " - " + " ".join(temp)
-    else:
-        challengeName = ""
-
-    newTitle = newTitle + challengeName
-    return newTitle
+    return newTitle + suffix
 
 
 def main():
