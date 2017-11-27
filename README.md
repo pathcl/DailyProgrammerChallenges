@@ -1,18 +1,44 @@
 # DailyProgrammerChallenges
 
-This repo contains all of the challenges from [**r/dailyprogrammer**](http://reddit.com/r/dailyprogrammer) and also scripts used to pull challenges from the subreddit each week and to cleanup directories & remove unnecessary posts 
+This repo contains all of the challenges from [**r/dailyprogrammer**](http://reddit.com/r/dailyprogrammer) and also scripts used to pull challenges from the subreddit 3 times per week and to cleanup directories & remove unnecessary posts.
 
-The [**post-challenges.py**](https://github.com/FreddieV4/DailyProgrammerChallenges/blob/master/post-challenges.py) script is ran via a cron job on a VPS at the end of each week, and then automatically pushes that week's challenges to this repository. The script is pretty inefficient, but it gets the job done. If you see ways to improve it, feel free to submit a pull request and add your name as a contributor.
+## Requirements
 
-## Required Modules:
-- praw
-- subprocess
-- re
-- os
-- pprint
+- Python 3
+  - praw
+  - pprint
 
-**post-challenges.py runs on Python 3.x**
+## Installation
 
+  ```bash
+  $ pip3 install -r etc/requirements.txt
+  ```
+
+## How to use
+
+The script can also be run via the command line by running `./post-challenges.py <number_of_challenges>`
+It will look for a copy of `praw.ini`, an example is in `etc/praw.ini.example`
+
+You may wish to run this in a temporary directory, to avoid adding folders directly to the top directory of the repo. Move the various levels of challenges into their respective end points.
+
+### Example full run
+
+  ```bash
+  $ cd DailyProgrammerChallenges
+  $ mkdir tmp
+  $ cp etc/praw.ini.example tmp/praw.ini
+  $ cd tmp
+  # Edit praw.ini with the correct info
+  $ ../post-challenges.py
+  # Take a look at what was downloaded for any 'problems'
+  $ mv *Easy* "Easy Challenges/."
+  $ mv *Intermediate* "Intermediate Challenges/."
+  $ mv *Hard* "Hard Challenges/."
+  $ cd ..
+  $ ./transform.py
+  ```
+
+  Examine the changes that `transform.py` performed and check that they seem okay.
 
 ## Challenges & Solutions
 

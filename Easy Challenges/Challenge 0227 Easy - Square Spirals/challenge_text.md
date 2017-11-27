@@ -3,37 +3,37 @@
 Take a square grid, and put a cross on the center point, like this:
 
     + + + + +
-             
+
     + + + + +
-             
+
     + + X + +
-             
+
     + + + + +
-             
+
     + + + + +
 
 The grid is 5-by-5, and the cross indicates point 1. Let's call the top-left corner location (1, 1), so the center point is at location (3, 3). Now, place another cross to the right, and trace the path:
 
     + + + + +
-             
+
     + + + + +
-             
+
     + + X-X +
-             
+
     + + + + +
-             
+
     + + + + +
 
 This second point (point 2) is now at location (4, 3). If you continually move around anticlockwise as much as you can from this point, you will form a square spiral, as this diagram shows the beginning of:
 
     + + + + +
-             
+
     + X-X-X .
       |   | .
     + X X-X .
       |     |
     + X-X-X-X
-             
+
     + + + + +
 
 Your challenge today is to do two things: convert a point number to its location on the spiral, and vice versa.
@@ -63,7 +63,7 @@ If you're given the point number of a point, work out its location. If you're gi
     5-4-3
     |   |
     6 1-2
-    |    
+    |
     7-8-9
 
 ### Input
@@ -96,7 +96,7 @@ This corresponds to the top-left point (1, 1) in [this 7-by-7 grid](https://uplo
     50
 
 ### Output
-    
+
     (10, 9)
 
 ## Example 4
